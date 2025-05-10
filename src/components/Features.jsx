@@ -6,48 +6,12 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import MuiChip from '@mui/material/Chip';
-import { useTheme } from '@mui/system';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import CircularProgress from '@mui/material/CircularProgress';
+import Alert from '@mui/material/Alert';
 
-
-const trending = [
-  {
-    title: 'Inception',
-    description: 'A thief who steals corporate secrets through dream-sharing technology.',
-    imageLight: `url("/poster1.jpg")`,
-    imageDark: `url("/poster1.jpg")`,
-  },
-  {
-    title: 'The Shawshank Redemption',
-    description: 'Two imprisoned men bond over a number of years, finding solace and eventual redemption.',
-    imageLight: `url("/poster2.jpg")`,
-    imageDark: `url("/poster2.jpg")`,
-  },
-  {
-    title: 'The Dark Knight',
-    description: 'When the menace known as the Joker emerges, Batman must confront chaos.',
-    imageLight: `url("/poster3.jpg")`,
-    imageDark: `url("/poster3.jpg")`,
-  },
-  {
-    title: 'Pulp Fiction',
-    description: 'The lives of two mob hitmen, a boxer, a gangster and his wife intertwine.',
-    imageLight: `url("/poster4.jpg")`,
-    imageDark: `url("/poster4.jpg")`,
-  },
-  {
-    title: 'Fight Club',
-    description: 'An insomniac office worker forms an underground fight club.',
-    imageLight: `url("/poster5.jpg")`,
-    imageDark: `url("/poster5.jpg")`,
-  },
-  {
-    title: 'Forrest Gump',
-    description: 'The presidencies of Kennedy and Johnson, Vietnam, Watergate, and other history unfold.',
-    imageLight: `url("/poster6.jpg")`,
-    imageDark: `url("/poster6.jpg")`,
-  },
-];
-
+// Styled chip component
 const Chip = styled(MuiChip)(({ theme }) => ({
   variants: [
     {
@@ -67,8 +31,43 @@ const Chip = styled(MuiChip)(({ theme }) => ({
   ],
 }));
 
-function MobileLayout({ selectedItemIndex, handleItemClick, selectedFeature }) {
-  if (!trending[selectedItemIndex]) {
+// TabPanel component for category switching
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`movie-tabpanel-${index}`}
+      aria-labelledby={`movie-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ py: 3 }}>
+          {children}
+        </Box>
+      )}
+    </div>
+  );
+}
+
+TabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired,
+};
+
+function a11yProps(index) {
+  return {
+    id: `movie-tab-${index}`,
+    'aria-controls': `movie-tabpanel-${index}`,
+  };
+}
+
+// Mobile layout component
+function MobileLayout({ movies, selectedItemIndex, handleItemClick, selectedMovie }) {
+  if (!movies || movies.length === 0 || !selectedMovie) {
     return null;
   }
 
@@ -80,12 +79,12 @@ function MobileLayout({ selectedItemIndex, handleItemClick, selectedFeature }) {
         gap: 2,
       }}
     >
-      <Box sx={{ display: 'flex', gap: 2, overflow: 'hidden' }}>
-        {trending.map(({ title }, index) => (
+      <Box sx={{ display: 'flex', gap: 2, overflow: 'auto', pb: 1 }}>
+        {movies.map((movie, index) => (
           <Chip
             size="medium"
             key={index}
-            label={title}
+            label={movie.title}
             onClick={() => handleItemClick(index)}
             selected={selectedItemIndex === index}
           />
@@ -98,22 +97,15 @@ function MobileLayout({ selectedItemIndex, handleItemClick, selectedFeature }) {
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             minHeight: 250,
-            backgroundImage: 'var(--trending-imageLight)',
-            ...theme.applyStyles('dark', {
-              backgroundImage: 'var(--trending-imageDark)',
-            }),
+            backgroundImage: `url(https://image.tmdb.org/t/p/w500${selectedMovie.poster_path})`,
           })}
-          style={{
-            '--trending-imageLight': trending[selectedItemIndex].imageLight,
-            '--trending-imageDark': trending[selectedItemIndex].imageDark,
-          }}
         />
         <Box sx={{ px: 2, pb: 2 }}>
           <Typography gutterBottom sx={{ color: 'text.primary', fontWeight: 'medium' }}>
-            {selectedFeature.title}
+            {selectedMovie.title}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1.5 }}>
-            {selectedFeature.description}
+            {selectedMovie.overview}
           </Typography>
         </Box>
       </Card>
@@ -123,182 +115,235 @@ function MobileLayout({ selectedItemIndex, handleItemClick, selectedFeature }) {
 
 MobileLayout.propTypes = {
   handleItemClick: PropTypes.func.isRequired,
-  selectedFeature: PropTypes.shape({
-    description: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-    imageDark: PropTypes.string.isRequired,
-    imageLight: PropTypes.string.isRequired,
-  }).isRequired,
+  selectedMovie: PropTypes.shape({
+    overview: PropTypes.string,
+    title: PropTypes.string,
+    poster_path: PropTypes.string,
+  }),
   selectedItemIndex: PropTypes.number.isRequired,
+  movies: PropTypes.array.isRequired,
 };
 
-export default function TrendingMovies() {
-  const theme = useTheme();
-  const [selectedItemIndex, setSelectedItemIndex] = React.useState(0);
+// MovieGrid component for displaying grid of movies
+function MovieGrid({ movies }) {
+  if (!movies || movies.length === 0) {
+    return null;
+  }
 
   return (
-
-    // Trending section
-    <>
-    <Container
-      id="trending-movies"
+    <Box
       sx={{
-        pt: { xs: 8, sm: 5 },
+        display: { xs: 'none', sm: 'grid' },
+        width: '100%',
+        gridTemplateColumns: { sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)', lg: 'repeat(4, 1fr)' },
+        gap: 3,
+        mt:5
+      }}
+    >
+      {movies.map((movie, index) => (
+        <Card
+          key={index}
+          variant="outlined"
+          sx={{
+            height: '100%',
+            transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+            '&:hover': {
+              transform: 'scale(1.03)',
+              boxShadow: 6,
+            },
+          }}
+        >
+          <Box
+            sx={{
+              position: 'relative',
+              pt: '150%',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundImage: movie.poster_path 
+                ? `url(https://image.tmdb.org/t/p/w500${movie.poster_path})`
+                : 'linear-gradient(to bottom right, #808080, #404040)',
+            }}
+          />
+          <Box sx={{ p: 2 }}>
+            <Typography variant="h6" component="h3" gutterBottom>
+              {movie.title}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {movie.overview.length > 120 ? `${movie.overview.substring(0, 120)}...` : movie.overview}
+            </Typography>
+          </Box>
+        </Card>
+      ))}
+    </Box>
+  );
+}
+
+MovieGrid.propTypes = {
+  movies: PropTypes.array.isRequired,
+};
+
+// Main Movie Showcase component
+export default function MovieShowcase() {
+  const [tabValue, setTabValue] = React.useState(0);
+  const [trendingMovies, setTrendingMovies] = React.useState([]);
+  const [latestMovies, setLatestMovies] = React.useState([]);
+  const [topPickMovies, setTopPickMovies] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState(null);
+  
+  // Selected movie indices for mobile view
+  const [selectedTrendingIndex, setSelectedTrendingIndex] = React.useState(0);
+  const [selectedLatestIndex, setSelectedLatestIndex] = React.useState(0);
+  const [selectedTopPickIndex, setSelectedTopPickIndex] = React.useState(0);
+
+  // API key for TMDb
+  const API_KEY = '536bf1b102f1ad7b92eb4e41eae3d40e';
+  const API_BASE_URL = 'https://api.themoviedb.org/3';
+
+  // Fetch movies from TMDb API
+  React.useEffect(() => {
+    const fetchMovies = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        // Fetch trending movies
+        const trendingResponse = await fetch(
+          `${API_BASE_URL}/trending/movie/week?api_key=${API_KEY}`
+        );
+        const trendingData = await trendingResponse.json();
+        
+        // Fetch latest movies
+        const latestResponse = await fetch(
+          `${API_BASE_URL}/movie/now_playing?api_key=${API_KEY}`
+        );
+        const latestData = await latestResponse.json();
+        
+        // Fetch top-rated movies (using as "top picks")
+        const topPicksResponse = await fetch(
+          `${API_BASE_URL}/movie/top_rated?api_key=${API_KEY}`
+        );
+        const topPicksData = await topPicksResponse.json();
+        
+        setTrendingMovies(trendingData.results.slice(0, 8));
+        setLatestMovies(latestData.results.slice(0, 8));
+        setTopPickMovies(topPicksData.results.slice(0, 8));
+      } catch (err) {
+        setError('Failed to fetch movies. Please try again later.');
+        console.error('Error fetching movies:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchMovies();
+  }, [API_KEY]);
+
+  const handleTabChange = (event, newValue) => {
+    setTabValue(newValue);
+  };
+
+  // Render loading state
+  if (loading) {
+    return (
+      <Container
+        sx={{
+          pt: { xs: 10, sm: 12 }, // Added extra padding to avoid navbar overlap
+          pb: { xs: 8, sm: 12 },
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          minHeight: '50vh',
+        }}
+      >
+        <CircularProgress />
+      </Container>
+    );
+  }
+
+  // Render error state
+  if (error) {
+    return (
+      <Container
+        sx={{
+          pt: { xs: 10, sm: 12 }, // Added extra padding to avoid navbar overlap
+          pb: { xs: 8, sm: 12 },
+        }}
+      >
+        <Alert severity="error">{error}</Alert>
+      </Container>
+    );
+  }
+
+  return (
+    <Container
+      id="movie-showcase"
+      sx={{
+        pt: { xs: 10, sm: 12 }, // Added extra padding to avoid navbar overlap
         pb: { xs: 8, sm: 12 },
         position: 'relative',
+        mt:15
       }}
     >
       <Box
         sx={{
           width: '100%',
-          textAlign: { sm: 'center', md: 'center' },
-          mb: 10,
+          textAlign: { sm: 'left', md: 'center' },
+          mb: 4,
+          
         }}
       >
-        <Typography component="h2" variant="h4" gutterBottom sx={{ color: 'text.primary' }}>
-          Trending Right Now
+        <Typography component="h1" variant="h1" gutterBottom sx={{ color: 'primary.main',textAlign:'center' }}>
+          Movie Showcase
         </Typography>
-        <Typography variant="body1" sx={{ color: 'text.secondary', mb: 4 }}>
-          These films have earned high praise from countless viewers, making them some of the most talked-about picks right now.
+        <Typography variant="body1" sx={{ color: 'text.secondary', mb: 6 ,textAlign:'center'}}>
+          Discover the best films across different categories, powered by TMDb
         </Typography>
       </Box>
 
-      <Box
-        sx={{
-          display: { xs: 'none', sm: 'grid' },
-          width: '100%',
-          gridTemplateColumns: { sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)', lg: 'repeat(4, 1fr)' },
-          gap: 3,
-        }}
-      >
-        {trending.map((item, index) => (
-          <Card
-            key={index}
-            variant="outlined"
-            sx={{
-              height: '100%',
-              transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-              '&:hover': {
-                transform: 'scale(1.03)',
-                boxShadow: 6,
-              },
-            }}
-          >
-            <Box
-              sx={(theme) => ({
-                position: 'relative',
-                pt: '125%',
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                backgroundImage: 'var(--trending-imageLight)',
-                ...theme.applyStyles('dark', {
-                  backgroundImage: 'var(--trending-imageDark)',
-                }),
-              })}
-              style={{
-                '--trending-imageLight': item.imageLight,
-                '--trending-imageDark': item.imageDark,
-              }}
-            />
-            <Box sx={{ p: 2 }}>
-              <Typography variant="h6" component="h3" gutterBottom>
-                {item.title}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {item.description}
-              </Typography>
-            </Box>
-          </Card>
-        ))}
+      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <Tabs 
+          value={tabValue} 
+          onChange={handleTabChange}
+          variant="scrollable"
+          scrollButtons="auto"
+          aria-label="movie categories tabs"
+        >
+          <Tab label="Trending Right Now" {...a11yProps(0)} />
+          <Tab label="Latest Releases" {...a11yProps(1)} />
+          <Tab label="Top Picks For You" {...a11yProps(2)} />
+        </Tabs>
       </Box>
 
-      <MobileLayout
-        selectedItemIndex={selectedItemIndex}
-        handleItemClick={(index) => setSelectedItemIndex(index)}
-        selectedFeature={trending[selectedItemIndex]}
-      />
+      <TabPanel value={tabValue} index={0}>
+        <MovieGrid movies={trendingMovies} />
+        <MobileLayout
+          movies={trendingMovies}
+          selectedItemIndex={selectedTrendingIndex}
+          handleItemClick={(index) => setSelectedTrendingIndex(index)}
+          selectedMovie={trendingMovies[selectedTrendingIndex]}
+        />
+      </TabPanel>
+      
+      <TabPanel value={tabValue} index={1}>
+        <MovieGrid movies={latestMovies} />
+        <MobileLayout
+          movies={latestMovies}
+          selectedItemIndex={selectedLatestIndex}
+          handleItemClick={(index) => setSelectedLatestIndex(index)}
+          selectedMovie={latestMovies[selectedLatestIndex]}
+        />
+      </TabPanel>
+      
+      <TabPanel value={tabValue} index={2}>
+        <MovieGrid movies={topPickMovies} />
+        <MobileLayout
+          movies={topPickMovies}
+          selectedItemIndex={selectedTopPickIndex}
+          handleItemClick={(index) => setSelectedTopPickIndex(index)}
+          selectedMovie={topPickMovies[selectedTopPickIndex]}
+        />
+      </TabPanel>
     </Container>
-
-    {/* Movie Library */}
-
-    <Container
-      id="Movie-Library"
-      sx={{
-        pt: { xs: 8, sm: 5 },
-        pb: { xs: 8, sm: 12 },
-        position: 'relative',
-      }}
-    >
-      <Box
-        sx={{
-          width: '100%',
-          textAlign: { sm: 'center', md: 'center' },
-          mb: 10,
-        }}
-      >
-        <Typography component="h2" variant="h4" gutterBottom sx={{ color: 'text.primary' }}>
-          Movie Library
-        </Typography>
-        <Typography variant="body1" sx={{ color: 'text.secondary', mb: 4 }}>
-          We've handpicked the best movies just for you—carefully curated to bring you the finest in cinema. From timeless classics to the latest blockbusters, every title in our library is chosen with care to match your taste. Whether you're in the mood for a thrilling adventure, heartwarming drama, or a night of laughs, we’ve got something special waiting for you.
-        </Typography>
-      </Box>
-
-      <Box
-        sx={{
-          display: { xs: 'none', sm: 'grid' },
-          width: '100%',
-          gridTemplateColumns: { sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)', lg: 'repeat(4, 1fr)' },
-          gap: 3,
-        }}
-      >
-        {trending.map((item, index) => (
-          <Card
-            key={index}
-            variant="outlined"
-            sx={{
-              height: '100%',
-              transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-              '&:hover': {
-                transform: 'scale(1.03)',
-                boxShadow: 6,
-              },
-            }}
-          >
-            <Box
-              sx={(theme) => ({
-                position: 'relative',
-                pt: '125%',
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                backgroundImage: 'var(--trending-imageLight)',
-                ...theme.applyStyles('dark', {
-                  backgroundImage: 'var(--trending-imageDark)',
-                }),
-              })}
-              style={{
-                '--trending-imageLight': item.imageLight,
-                '--trending-imageDark': item.imageDark,
-              }}
-            />
-            <Box sx={{ p: 2 }}>
-              <Typography variant="h6" component="h3" gutterBottom>
-                {item.title}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {item.description}
-              </Typography>
-            </Box>
-          </Card>
-        ))}
-      </Box>
-
-      <MobileLayout
-        selectedItemIndex={selectedItemIndex}
-        handleItemClick={(index) => setSelectedItemIndex(index)}
-        selectedFeature={trending[selectedItemIndex]}
-      />
-    </Container>
-    </>
   );
 }

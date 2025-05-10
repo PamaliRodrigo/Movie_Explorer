@@ -9,6 +9,7 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import visuallyHidden from '@mui/utils/visuallyHidden';
 import { styled } from '@mui/material/styles';
+import { Snackbar, Alert } from '@mui/material';
 
 const StyledBox = styled('div')(({ theme }) => ({
   alignSelf: 'center',
@@ -36,6 +37,22 @@ const StyledBox = styled('div')(({ theme }) => ({
 }));
 
 export default function Hero() {
+  const [email, setEmail] = React.useState('');
+  const [openSnackbar, setOpenSnackbar] = React.useState(false);
+
+  const handleSignIn = () => {
+    // Here you would typically handle the sign-in logic
+    // For now, we'll just show the welcome popup
+    setOpenSnackbar(true);
+  };
+
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenSnackbar(false);
+  };
+
   return (
     <Box
       id="hero"
@@ -95,7 +112,7 @@ export default function Hero() {
               width: { sm: '100%', md: '80%' },
             }}
           >
-            Explore Best Movies in the whole world.Experience the joy of finding the best movies of all time.Enter what you desire and let us bring up the whole cinema world for you
+            Explore Best Movies in the whole world. Experience the joy of finding the best movies of all time. Enter what you desire and let us bring up the whole cinema world for you
           </Typography>
           <Stack
             direction={{ xs: 'column', sm: 'row' }}
@@ -104,20 +121,23 @@ export default function Hero() {
             sx={{ pt: 2, width: { xs: '100%', sm: '350px' } }}
           >
             <InputLabel htmlFor="search-hero" sx={visuallyHidden}>
-              Search
+              Input
             </InputLabel>
             <TextField
               id="search-hero"
               hiddenLabel
               size="small"
               variant="outlined"
-              aria-label="Search Your favourite movie"
-              placeholder="Movie Name here"
+              aria-label="Enter Your Mail"
+              placeholder="Your Email here"
               fullWidth
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleSignIn()}
               slotProps={{
                 htmlInput: {
                   autoComplete: 'off',
-                  'aria-label': 'Search Your favourite movie',
+                  'aria-label': 'Enter your email',
                 },
               }}
             />
@@ -126,8 +146,9 @@ export default function Hero() {
               color="primary"
               size="small"
               sx={{ minWidth: 'fit-content' }}
+              onClick={handleSignIn}
             >
-              Search here
+              Sign In
             </Button>
           </Stack>
           <Typography
@@ -135,8 +156,8 @@ export default function Hero() {
             color="text.secondary"
             sx={{ textAlign: 'center' }}
           >
-            By clicking &quot;Search here&quot; you agree to our&nbsp;
-            <Link href="#" color="primary">
+            By clicking &quot;Sign In&quot; you agree to our&nbsp;
+            <Link href="terms.txt" color="primary">
               Terms & Conditions
             </Link>
             .
@@ -144,6 +165,23 @@ export default function Hero() {
         </Stack>
         <StyledBox id="image" />
       </Container>
+      
+      {/* Welcome Popup */}
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert 
+          onClose={handleCloseSnackbar} 
+          severity="success" 
+          variant="filled"
+          sx={{ width: '100%' }}
+        >
+          Welcome aboard!
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }

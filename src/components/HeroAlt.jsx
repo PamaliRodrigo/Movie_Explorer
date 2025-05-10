@@ -6,8 +6,27 @@ import InputLabel from '@mui/material/InputLabel';
 import TextField from '@mui/material/TextField';
 import visuallyHidden from '@mui/utils/visuallyHidden';
 import Button from '@mui/material/Button';
+import React, { useState } from 'react';
+import axios from 'axios';
 
-export default function Hero() {
+const TMDB_API_KEY = '536bf1b102f1ad7b92eb4e41eae3d40e';
+
+export default function Hero({onSearch}) {
+
+   const [query, setQuery] = useState('');
+
+  const handleSearch = async () => {
+    if (!query) return;
+    try {
+      const res = await axios.get(
+        `https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(query)}`
+      );
+      onSearch(res.data.results);
+    } catch (error) {
+      console.error('Error fetching movies:', error);
+    }
+  };
+
   return (
     <Box
       id="hero"
@@ -43,7 +62,7 @@ export default function Hero() {
               flexDirection: { xs: 'column', sm: 'row' },
               alignItems: 'center',
               fontSize: 'clamp(3rem, 10vw, 3.5rem)',
-              color: 'primary.dark'
+              color: 'primary.main'
             }}
           >
             &nbsp;Movie Library&nbsp;
@@ -74,6 +93,9 @@ export default function Hero() {
               aria-label="Search Your favourite movie"
               placeholder="Movie Name here"
               fullWidth
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
               slotProps={{
                 htmlInput: {
                   autoComplete: 'off',
@@ -86,6 +108,7 @@ export default function Hero() {
               color="primary"
               size="small"
               sx={{ minWidth: 'fit-content' }}
+              onClick={handleSearch}
             >
               Search here
             </Button>

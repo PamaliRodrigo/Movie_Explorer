@@ -1,97 +1,75 @@
-import * as React from 'react';
-import PropTypes from 'prop-types';
-import Avatar from '@mui/material/Avatar';
-import AvatarGroup from '@mui/material/AvatarGroup';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import Pagination from '@mui/material/Pagination';
-import Typography from '@mui/material/Typography';
-import { styled } from '@mui/material/styles';
-import NavigateNextRoundedIcon from '@mui/icons-material/NavigateNextRounded';
+import React, { useState, useEffect } from 'react';
+import {
+  Card,
+  CardContent,
+  Typography,
+  Box,
+  Chip,
+  Avatar,
+  AvatarGroup,
+  Pagination,
+  CircularProgress,
+  styled
+} from '@mui/material';
 
-const articleInfo = [
-  {
-    tag: 'Engineering',
-    title: 'The future of AI in software engineering',
-    description:
-      'Artificial intelligence is revolutionizing software engineering. Explore how AI-driven tools are enhancing development processes and improving software quality.',
-    authors: [
-      { name: 'Remy Sharp', avatar: '/static/images/avatar/1.jpg' },
-      { name: 'Travis Howard', avatar: '/static/images/avatar/2.jpg' },
-    ],
-  },
-  {
-    tag: 'Product',
-    title: 'Driving growth with user-centric product design',
-    description:
-      'Our user-centric product design approach is driving significant growth. Learn about the strategies we employ to create products that resonate with users.',
-    authors: [{ name: 'Erica Johns', avatar: '/static/images/avatar/6.jpg' }],
-  },
-  {
-    tag: 'Design',
-    title: 'Embracing minimalism in modern design',
-    description:
-      'Minimalism is a key trend in modern design. Discover how our design team incorporates minimalist principles to create clean and impactful user experiences.',
-    authors: [{ name: 'Kate Morrison', avatar: '/static/images/avatar/7.jpg' }],
-  },
-  {
-    tag: 'Company',
-    title: 'Cultivating a culture of innovation',
-    description:
-      'Innovation is at the heart of our company culture. Learn about the initiatives we have in place to foster creativity and drive groundbreaking solutions.',
-    authors: [{ name: 'Cindy Baker', avatar: '/static/images/avatar/3.jpg' }],
-  },
-  {
-    tag: 'Engineering',
-    title: 'Advancing cybersecurity with next-gen solutions',
-    description:
-      'Our next-generation cybersecurity solutions are setting new standards in the industry. Discover how we protect our clients from evolving cyber threats.',
-    authors: [
-      { name: 'Agnes Walker', avatar: '/static/images/avatar/4.jpg' },
-      { name: 'Trevor Henderson', avatar: '/static/images/avatar/5.jpg' },
-    ],
-  },
-  {
-    tag: 'Product',
-    title: 'Enhancing customer experience through innovation',
-    description:
-      'Our innovative approaches are enhancing customer experience. Learn about the new features and improvements that are delighting our users.',
-    authors: [{ name: 'Travis Howard', avatar: '/static/images/avatar/2.jpg' }],
-  },
-  {
-    tag: 'Engineering',
-    title: 'Pioneering sustainable engineering solutions',
-    description:
-      "Learn about our commitment to sustainability and the innovative engineering solutions we're implementing to create a greener future. Discover the impact of our eco-friendly initiatives.",
-    authors: [
-      { name: 'Agnes Walker', avatar: '/static/images/avatar/4.jpg' },
-      { name: 'Trevor Henderson', avatar: '/static/images/avatar/5.jpg' },
-    ],
-  },
-  {
-    tag: 'Product',
-    title: 'Maximizing efficiency with our latest product updates',
-    description:
-      'Our recent product updates are designed to help you maximize efficiency and achieve more. Get a detailed overview of the new features and improvements that can elevate your workflow.',
-    authors: [{ name: 'Travis Howard', avatar: '/static/images/avatar/2.jpg' }],
-  },
-  {
-    tag: 'Design',
-    title: 'Designing for the future: trends and insights',
-    description:
-      'Stay ahead of the curve with the latest design trends and insights. Our design team shares their expertise on creating intuitive and visually stunning user experiences.',
-    authors: [{ name: 'Kate Morrison', avatar: '/static/images/avatar/7.jpg' }],
-  },
-  {
-    tag: 'Company',
-    title: "Our company's journey: milestones and achievements",
-    description:
-      "Take a look at our company's journey and the milestones we've achieved along the way. From humble beginnings to industry leader, discover our story of growth and success.",
-    authors: [{ name: 'Cindy Baker', avatar: '/static/images/avatar/3.jpg' }],
-  },
-];
 
-const StyledTypography = styled(Typography)({
+// TMDB API Constants
+const API_KEY = '536bf1b102f1ad7b92eb4e41eae3d40e'; // You'll need to replace this with your actual API key
+const BASE_URL = 'https://api.themoviedb.org/3';
+const IMG_BASE_URL = 'https://image.tmdb.org/t/p/w200';
+
+// Article/Movie Card Component
+const StyledArticleCard = styled(Card)(({ theme, focused }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'space-between',
+  gap: theme.spacing(2),
+  height: '100%',
+  padding: theme.spacing(2),
+  transition: 'transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
+  outline: focused ? '2px solid' : 'none',
+  outlineColor: focused ? theme.palette.primary.main : 'transparent',
+  outlineOffset: focused ? theme.spacing(0.5) : 0,
+  borderRadius: theme.shape.borderRadius,
+  '&:hover': {
+    transform: 'translateY(-4px)',
+    boxShadow: theme.shadows[4],
+    cursor: 'pointer',
+  },
+}));
+
+const ArticleTitle = styled(Typography)(({ theme }) => ({
+  position: 'relative',
+  marginBottom: theme.spacing(1),
+  '& .hover-arrow': {
+    visibility: 'hidden',
+    position: 'absolute',
+    right: 0,
+    top: '50%',
+    transform: 'translateY(-50%)',
+    opacity: 0.7,
+  },
+  '& .hover-underline': {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    width: 0,
+    height: '1px',
+    backgroundColor: 'currentColor',
+    opacity: 0.3,
+    transition: 'width 300ms',
+  },
+  '&:hover': {
+    '& .hover-arrow': {
+      visibility: 'visible',
+    },
+    '& .hover-underline': {
+      width: '100%',
+    },
+  },
+}));
+
+const DescriptionText = styled(Typography)({
   display: '-webkit-box',
   WebkitBoxOrient: 'vertical',
   WebkitLineClamp: 2,
@@ -99,87 +77,87 @@ const StyledTypography = styled(Typography)({
   textOverflow: 'ellipsis',
 });
 
-const TitleTypography = styled(Typography)(({ theme }) => ({
-  position: 'relative',
-  textDecoration: 'none',
-  '&:hover': { cursor: 'pointer' },
-  '& .arrow': {
-    visibility: 'hidden',
-    position: 'absolute',
-    right: 0,
-    top: '50%',
-    transform: 'translateY(-50%)',
-  },
-  '&:hover .arrow': {
-    visibility: 'visible',
-    opacity: 0.7,
-  },
-  '&:focus-visible': {
-    outline: '3px solid',
-    outlineColor: 'hsla(210, 98%, 48%, 0.5)',
-    outlineOffset: '3px',
-    borderRadius: '8px',
-  },
-  '&::before': {
-    content: '""',
-    position: 'absolute',
-    width: 0,
-    height: '1px',
-    bottom: 0,
-    left: 0,
-    backgroundColor: (theme.vars || theme).palette.text.primary,
-    opacity: 0.3,
-    transition: 'width 0.3s ease, opacity 0.3s ease',
-  },
-  '&:hover::before': {
-    width: '100%',
+const CreditsContainer = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  marginTop: 'auto',
+  color: theme.palette.text.secondary,
+  fontSize: theme.typography.caption.fontSize,
+}));
+
+const PeopleContainer = styled(Box)({
+  display: 'flex',
+  alignItems: 'center',
+});
+
+const StyledAvatarGroup = styled(AvatarGroup)(({ theme }) => ({
+  marginRight: theme.spacing(1),
+  '& .MuiAvatar-root': {
+    width: theme.spacing(3),
+    height: theme.spacing(3),
+    border: `2px solid ${theme.palette.background.paper}`,
   },
 }));
 
-function Author({ authors }) {
+function ArticleCard({ article, index, focusedIndex, onFocus, onBlur }) {
+  const focused = focusedIndex === index;
+  
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'row',
-        gap: 2,
-        alignItems: 'center',
-        justifyContent: 'space-between',
-      }}
+    <StyledArticleCard 
+      focused={focused}
+      onFocus={() => onFocus(index)}
+      onBlur={onBlur}
+      tabIndex={0}
     >
-      <Box
-        sx={{ display: 'flex', flexDirection: 'row', gap: 1, alignItems: 'center' }}
-      >
-        <AvatarGroup max={3}>
-          {authors.map((author, index) => (
-            <Avatar
-              key={index}
-              alt={author.name}
-              src={author.avatar}
-              sx={{ width: 24, height: 24 }}
-            />
-          ))}
-        </AvatarGroup>
-        <Typography variant="caption">
-          {authors.map((author) => author.name).join(', ')}
-        </Typography>
-      </Box>
-      <Typography variant="caption">July 14, 2021</Typography>
-    </Box>
+      <Chip 
+        label={article.tag} 
+        size="small" 
+        color="default" 
+        sx={{ alignSelf: 'flex-start' }}
+      />
+      
+      <ArticleTitle variant="h6" component="h3">
+        {article.title}
+        <span className="hover-arrow">→</span>
+        <span className="hover-underline"></span>
+      </ArticleTitle>
+      
+      <DescriptionText variant="body2" color="text.secondary">
+        {article.description || 'No description available'}
+      </DescriptionText>
+
+      <CreditsContainer>
+        <PeopleContainer>
+          <StyledAvatarGroup max={3}>
+            {article.credits.slice(0, 3).map((person, index) => (
+              <Avatar
+                key={index}
+                alt={person.name}
+                src={person.profile_path ? `${IMG_BASE_URL}${person.profile_path}` : '/api/placeholder/24/24'}
+              />
+            ))}
+          </StyledAvatarGroup>
+          {article.credits.map(person => person.name).join(', ')}
+        </PeopleContainer>
+        <span>{article.credits[0]?.releaseDate || formatDate(article.release_date || article.first_air_date)}</span>
+      </CreditsContainer>
+    </StyledArticleCard>
   );
 }
 
-Author.propTypes = {
-  authors: PropTypes.arrayOf(
-    PropTypes.shape({
-      avatar: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-    }),
-  ).isRequired,
-};
+function formatDate(dateString) {
+  if (!dateString) return 'Unknown date';
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+}
 
 export default function Latest() {
-  const [focusedCardIndex, setFocusedCardIndex] = React.useState(null);
+  const [movies, setMovies] = useState([]);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [focusedCardIndex, setFocusedCardIndex] = useState(null);
 
   const handleFocus = (index) => {
     setFocusedCardIndex(index);
@@ -189,52 +167,132 @@ export default function Latest() {
     setFocusedCardIndex(null);
   };
 
+  const handlePageChange = (event, value) => {
+    setPage(value);
+  };
+
+  const getMediaTag = (movie) => {
+    if (movie.media_type) return movie.media_type.charAt(0).toUpperCase() + movie.media_type.slice(1);
+    if (movie.first_air_date) return 'TV';
+    return 'Movie';
+  };
+
+  const fetchMovieCredits = async (id, mediaType) => {
+    try {
+      const endpoint = mediaType === 'tv' 
+        ? `${BASE_URL}/tv/${id}/credits?api_key=${API_KEY}` 
+        : `${BASE_URL}/movie/${id}/credits?api_key=${API_KEY}`;
+      
+      const response = await fetch(endpoint);
+      const data = await response.json();
+      
+      let keyPeople = [];
+      if (mediaType === 'movie') {
+        keyPeople = data.crew.filter(person => person.job === 'Director').slice(0, 2);
+      } else {
+        keyPeople = data.crew.filter(person => person.job === 'Creator' || person.job === 'Executive Producer').slice(0, 2);
+      }
+      
+      if (keyPeople.length === 0 && data.cast && data.cast.length > 0) {
+        keyPeople = data.cast.slice(0, 2);
+      }
+      
+      return keyPeople;
+    } catch (error) {
+      console.error('Error fetching credits:', error);
+      return [];
+    }
+  };
+
+  useEffect(() => {
+    const fetchTrending = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch(
+          `${BASE_URL}/trending/all/week?api_key=${API_KEY}&page=${page}`
+        );
+        const data = await response.json();
+        
+        if (data.results) {
+          const moviesWithCredits = await Promise.all(
+            data.results.slice(0, 10).map(async (item) => {
+              const credits = await fetchMovieCredits(item.id, item.media_type);
+              const formattedDate = item.release_date || item.first_air_date;
+              
+              credits.forEach(person => {
+                person.releaseDate = formatDate(formattedDate);
+              });
+              
+              return {
+                ...item,
+                credits: credits.length > 0 ? credits : [{ name: 'Unknown', profile_path: null, releaseDate: formatDate(formattedDate) }],
+                tag: getMediaTag(item),
+                title: item.title || item.name,
+                description: item.overview,
+              };
+            })
+          );
+          
+          setMovies(moviesWithCredits);
+          setTotalPages(Math.min(data.total_pages, 10));
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTrending();
+  }, [page]);
+
   return (
-    <div>
-      <Typography variant="h2" gutterBottom>
+    <Box sx={{ maxWidth: 'lg', mx: 'auto', px: 4 }}>
+      <Typography variant="h4" component="h2" sx={{ mb: 4, fontWeight: 'bold' }}>
         Latest
       </Typography>
-      <Grid container spacing={8} columns={12} sx={{ my: 4 }}>
-        {articleInfo.map((article, index) => (
-          <Grid key={index} size={{ xs: 12, sm: 6 }}>
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                gap: 1,
-                height: '100%',
-              }}
-            >
-              <Typography gutterBottom variant="caption" component="div">
-                {article.tag}
-              </Typography>
-              <TitleTypography
-                gutterBottom
-                variant="h6"
-                onFocus={() => handleFocus(index)}
-                onBlur={handleBlur}
-                tabIndex={0}
-                className={focusedCardIndex === index ? 'Mui-focused' : ''}
-              >
-                {article.title}
-                <NavigateNextRoundedIcon
-                  className="arrow"
-                  sx={{ fontSize: '1rem' }}
+      
+      {loading ? (
+        <Box sx={{ display: 'flex', justifyContent: 'center', my: 8 }}>
+          <CircularProgress />
+        </Box>
+      ) : (
+        <>
+          <Box sx={{ 
+            display: 'grid',
+            gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' },
+            gap: { xs: 2, md: 4 },
+            my: 4
+          }}>
+            {movies.map((movie, index) => (
+              <Box key={index}>
+                <ArticleCard 
+                  article={movie}
+                  index={index}
+                  focusedIndex={focusedCardIndex}
+                  onFocus={handleFocus}
+                  onBlur={handleBlur}
                 />
-              </TitleTypography>
-              <StyledTypography variant="body2" color="text.secondary" gutterBottom>
-                {article.description}
-              </StyledTypography>
-
-              <Author authors={article.authors} />
-            </Box>
-          </Grid>
-        ))}
-      </Grid>
-      <Box sx={{ display: 'flex', flexDirection: 'row', pt: 4 }}>
-        <Pagination hidePrevButton hideNextButton count={10} boundaryCount={10} />
-      </Box>
-    </div>
+              </Box>
+            ))}
+          </Box>
+          
+          <Box sx={{ display: 'flex', justifyContent: 'center', pt: 4 }}>
+            <Pagination 
+              count={totalPages}
+              page={page}
+              onChange={handlePageChange}
+              color="primary"
+              sx={{
+                '& .MuiPaginationItem-root': {
+                  minWidth: 32,
+                  height: 32,
+                },
+              }}
+            />
+          </Box>
+        </>
+      )}
+    </Box>
   );
 }

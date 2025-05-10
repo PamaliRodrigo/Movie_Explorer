@@ -6,7 +6,6 @@ import AppAppBar from './components/AppAppBar';
 import MainContent from './components/MainContent';
 import Latest from './components/Latest';
 import Footer from './components/Footer';
-import { SitemarkIcon } from './components/CustomIcons';
 import HeroAlt from './components/HeroAlt'
 
 export default function Testimonals(props) {
@@ -14,7 +13,6 @@ export default function Testimonals(props) {
     <AppTheme {...props}>
       <CssBaseline enableColorScheme />
       <AppAppBar />
-      <HeroAlt/>
       <Container
         maxWidth="lg"
         component="main"

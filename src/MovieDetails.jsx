@@ -11,7 +11,7 @@ function MovieDetails(props){
     <AppTheme {...props}>
     <CssBaseline enableColorScheme />
     <AppAppBar />
-    <HeroAlt/>
+    
    <div>
         <Features />
         <Divider />
