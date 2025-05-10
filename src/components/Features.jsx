@@ -14,29 +14,53 @@ import ViewQuiltRoundedIcon from '@mui/icons-material/ViewQuiltRounded';
 
 const items = [
   {
-    icon: <ViewQuiltRoundedIcon />,
     title: 'Dashboard',
     description:
       'This item could provide a snapshot of the most important metrics or data points related to the product.',
-    imageLight: `url("https://mui.com/static/images/templates/templates-images/dash-light.png")`,
-    imageDark: `url("https://mui.com/static/images/templates/templates-images/dash-dark.png")`,
+    imageLight: `url("/poster1.jpg")`,
+    imageDark: `url("/poster1.jpg")`,
   },
   {
     icon: <EdgesensorHighRoundedIcon />,
     title: 'Mobile integration',
     description:
       'This item could provide information about the mobile app version of the product.',
-    imageLight: `url("https://mui.com/static/images/templates/templates-images/mobile-light.png")`,
-    imageDark: `url("https://mui.com/static/images/templates/templates-images/mobile-dark.png")`,
+    imageLight: `url("/poster2.jpg")`,
+    imageDark: `url("/poster2.jpg")`,
   },
   {
     icon: <DevicesRoundedIcon />,
     title: 'Available on all platforms',
     description:
       'This item could let users know the product is available on all platforms, such as web, mobile, and desktop.',
-    imageLight: `url("https://mui.com/static/images/templates/templates-images/devices-light.png")`,
-    imageDark: `url("https://mui.com/static/images/templates/templates-images/devices-dark.png")`,
+    imageLight: `url("/poster3.jpg")`,
+    imageDark: `url("/poster3.jpg")`,
   },
+  {
+    icon: <DevicesRoundedIcon />,
+    title: 'Available on all platforms',
+    description:
+      'This item could let users know the product is available on all platforms, such as web, mobile, and desktop.',
+    imageLight: `url("/poster4.jpg")`,
+    imageDark: `url("/poster4.jpg")`,
+  },
+  {
+    icon: <DevicesRoundedIcon />,
+    title: 'Available on all platforms',
+    description:
+      'This item could let users know the product is available on all platforms, such as web, mobile, and desktop.',
+    imageLight: `url("/poster5.jpg")`,
+    imageDark: `url("/poster5.jpg")`,
+  },
+  {
+    icon: <DevicesRoundedIcon />,
+    title: 'Available on all platforms',
+    description:
+      'This item could let users know the product is available on all platforms, such as web, mobile, and desktop.',
+    imageLight: `url("/poster6.jpg")`,
+    imageDark: `url("/poster6.jpg")`,
+  },
+
 ];
 
 const Chip = styled(MuiChip)(({ theme }) => ({
@@ -89,7 +113,7 @@ function MobileLayout({ selectedItemIndex, handleItemClick, selectedFeature }) {
             mb: 2,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
-            minHeight: 280,
+            minHeight: 250,
             backgroundImage: 'var(--items-imageLight)',
             ...theme.applyStyles('dark', {
               backgroundImage: 'var(--items-imageDark)',
@@ -137,12 +161,6 @@ export { MobileLayout };
 function Features() {
   const [selectedItemIndex, setSelectedItemIndex] = React.useState(0);
 
-  const handleItemClick = (index) => {
-    setSelectedItemIndex(index);
-  };
-
-  const selectedFeature = items[selectedItemIndex];
-
   return (
     <Container id="features" sx={{ py: { xs: 8, sm: 16 } }}>
       <Box sx={{ width: { sm: '100%', md: '60%' } }}>
@@ -152,122 +170,68 @@ function Features() {
           gutterBottom
           sx={{ color: 'text.primary' }}
         >
-          Product features
+          What's in the Store
         </Typography>
         <Typography
           variant="body1"
           sx={{ color: 'text.secondary', mb: { xs: 2, sm: 4 } }}
         >
-          Provide a brief overview of the key features of the product. For example,
-          you could list the number of features, their types or benefits, and
-          add-ons.
+          
         </Typography>
       </Box>
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: { xs: 'column', md: 'row-reverse' },
-          gap: 2,
-        }}
-      >
-        <div>
-          <Box
-            sx={{
-              display: { xs: 'none', sm: 'flex' },
-              flexDirection: 'column',
-              gap: 2,
-              height: '100%',
-            }}
-          >
-            {items.map(({ icon, title, description }, index) => (
-              <Box
-                key={index}
-                component={Button}
-                onClick={() => handleItemClick(index)}
-                sx={[
-                  (theme) => ({
-                    p: 2,
-                    height: '100%',
-                    width: '100%',
-                    '&:hover': {
-                      backgroundColor: (theme.vars || theme).palette.action.hover,
-                    },
-                  }),
-                  selectedItemIndex === index && {
-                    backgroundColor: 'action.selected',
-                  },
-                ]}
-              >
-                <Box
-                  sx={[
-                    {
-                      width: '100%',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'left',
-                      gap: 1,
-                      textAlign: 'left',
-                      textTransform: 'none',
-                      color: 'text.secondary',
-                    },
-                    selectedItemIndex === index && {
-                      color: 'text.primary',
-                    },
-                  ]}
-                >
-                  {icon}
-
-                  <Typography variant="h6">{title}</Typography>
-                  <Typography variant="body2">{description}</Typography>
-                </Box>
-              </Box>
-            ))}
-          </Box>
-          <MobileLayout
-            selectedItemIndex={selectedItemIndex}
-            handleItemClick={handleItemClick}
-            selectedFeature={selectedFeature}
-          />
-        </div>
+     
         <Box
-          sx={{
-            display: { xs: 'none', sm: 'flex' },
-            width: { xs: '100%', md: '70%' },
-            height: 'var(--items-image-height)',
-          }}
-        >
-          <Card
-            variant="outlined"
-            sx={{
-              height: '100%',
-              width: '100%',
-              display: { xs: 'none', sm: 'flex' },
-              pointerEvents: 'none',
-            }}
-          >
-            <Box
-              sx={(theme) => ({
-                m: 'auto',
-                width: 420,
-                height: 500,
-                backgroundSize: 'contain',
-                backgroundImage: 'var(--items-imageLight)',
-                ...theme.applyStyles('dark', {
-                  backgroundImage: 'var(--items-imageDark)',
-                }),
-              })}
-              style={
-                items[selectedItemIndex]
-                  ? {
-                      '--items-imageLight': items[selectedItemIndex].imageLight,
-                      '--items-imageDark': items[selectedItemIndex].imageDark,
-                    }
-                  : {}
-              }
-            />
-          </Card>
-        </Box>
+  sx={{
+    display: { xs: 'none', sm: 'grid' }, // Changed from flex to grid
+    width: '100%',
+    gridTemplateColumns: { sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)', lg: 'repeat(4, 1fr)' },
+    gap: 3,
+    height: 'auto', 
+  }}
+>
+  {items.map((item, index) => (
+    <Card
+      key={index}
+      variant="outlined"
+      sx={{
+        height: '100%',
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+        '&:hover': {
+          transform: 'scale(1.03)',
+          boxShadow: 6,
+        },
+      }}
+    >
+      <Box
+        sx={(theme) => ({
+          position: 'relative',
+          pt: '150%', 
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundImage: 'var(--items-imageLight)',
+          ...theme.applyStyles('dark', {
+            backgroundImage: 'var(--items-imageDark)',
+          }),
+        })}
+        style={{
+          '--items-imageLight': item.imageLight,
+          '--items-imageDark': item.imageDark,
+        }}
+      />
+      <Box sx={{ p: 2 }}>
+        <Typography variant="h6" component="h3" gutterBottom>
+          {item.title}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          {item.description}
+        </Typography>
       </Box>
+    </Card>
+  ))}
+</Box>
     </Container>
   );
 }

@@ -93,13 +93,13 @@ export const getDesignTokens = (mode) => {
       info: {
         light: brand[100],
         main: brand[300],
-        dark: brand[600],
+        dark: gray[900],
         contrastText: gray[50],
         ...(mode === 'dark' && {
           contrastText: brand[300],
           light: brand[500],
           main: brand[700],
-          dark: brand[900],
+          dark: gray[900],
         }),
       },
       warning: {
@@ -142,7 +142,7 @@ export const getDesignTokens = (mode) => {
         ...(mode === 'dark' && { default: gray[900], paper: 'hsl(220, 30%, 7%)' }),
       },
       text: {
-        primary: gray[800],
+        primary: gray[900],
         secondary: gray[600],
         warning: orange[400],
         ...(mode === 'dark' && {
