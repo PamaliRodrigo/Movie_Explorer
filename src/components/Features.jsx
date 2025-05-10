@@ -1,66 +1,51 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
-import MuiChip from '@mui/material/Chip';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
+import MuiChip from '@mui/material/Chip';
+import { useTheme } from '@mui/system';
 
-import DevicesRoundedIcon from '@mui/icons-material/DevicesRounded';
-import EdgesensorHighRoundedIcon from '@mui/icons-material/EdgesensorHighRounded';
-import ViewQuiltRoundedIcon from '@mui/icons-material/ViewQuiltRounded';
 
-const items = [
+const trending = [
   {
-    title: 'Dashboard',
-    description:
-      'This item could provide a snapshot of the most important metrics or data points related to the product.',
+    title: 'Inception',
+    description: 'A thief who steals corporate secrets through dream-sharing technology.',
     imageLight: `url("/poster1.jpg")`,
     imageDark: `url("/poster1.jpg")`,
   },
   {
-    icon: <EdgesensorHighRoundedIcon />,
-    title: 'Mobile integration',
-    description:
-      'This item could provide information about the mobile app version of the product.',
+    title: 'The Shawshank Redemption',
+    description: 'Two imprisoned men bond over a number of years, finding solace and eventual redemption.',
     imageLight: `url("/poster2.jpg")`,
     imageDark: `url("/poster2.jpg")`,
   },
   {
-    icon: <DevicesRoundedIcon />,
-    title: 'Available on all platforms',
-    description:
-      'This item could let users know the product is available on all platforms, such as web, mobile, and desktop.',
+    title: 'The Dark Knight',
+    description: 'When the menace known as the Joker emerges, Batman must confront chaos.',
     imageLight: `url("/poster3.jpg")`,
     imageDark: `url("/poster3.jpg")`,
   },
   {
-    icon: <DevicesRoundedIcon />,
-    title: 'Available on all platforms',
-    description:
-      'This item could let users know the product is available on all platforms, such as web, mobile, and desktop.',
+    title: 'Pulp Fiction',
+    description: 'The lives of two mob hitmen, a boxer, a gangster and his wife intertwine.',
     imageLight: `url("/poster4.jpg")`,
     imageDark: `url("/poster4.jpg")`,
   },
   {
-    icon: <DevicesRoundedIcon />,
-    title: 'Available on all platforms',
-    description:
-      'This item could let users know the product is available on all platforms, such as web, mobile, and desktop.',
+    title: 'Fight Club',
+    description: 'An insomniac office worker forms an underground fight club.',
     imageLight: `url("/poster5.jpg")`,
     imageDark: `url("/poster5.jpg")`,
   },
   {
-    icon: <DevicesRoundedIcon />,
-    title: 'Available on all platforms',
-    description:
-      'This item could let users know the product is available on all platforms, such as web, mobile, and desktop.',
+    title: 'Forrest Gump',
+    description: 'The presidencies of Kennedy and Johnson, Vietnam, Watergate, and other history unfold.',
     imageLight: `url("/poster6.jpg")`,
     imageDark: `url("/poster6.jpg")`,
   },
-
 ];
 
 const Chip = styled(MuiChip)(({ theme }) => ({
@@ -68,8 +53,7 @@ const Chip = styled(MuiChip)(({ theme }) => ({
     {
       props: ({ selected }) => !!selected,
       style: {
-        background:
-          'linear-gradient(to bottom right, hsl(210, 98%, 48%), hsl(210, 98%, 35%))',
+        background: 'linear-gradient(to bottom right, hsl(210, 98%, 48%), hsl(210, 98%, 35%))',
         color: 'hsl(0, 0%, 100%)',
         borderColor: (theme.vars || theme).palette.primary.light,
         '& .MuiChip-label': {
@@ -84,7 +68,7 @@ const Chip = styled(MuiChip)(({ theme }) => ({
 }));
 
 function MobileLayout({ selectedItemIndex, handleItemClick, selectedFeature }) {
-  if (!items[selectedItemIndex]) {
+  if (!trending[selectedItemIndex]) {
     return null;
   }
 
@@ -96,8 +80,8 @@ function MobileLayout({ selectedItemIndex, handleItemClick, selectedFeature }) {
         gap: 2,
       }}
     >
-      <Box sx={{ display: 'flex', gap: 2, overflow: 'auto' }}>
-        {items.map(({ title }, index) => (
+      <Box sx={{ display: 'flex', gap: 2, overflow: 'hidden' }}>
+        {trending.map(({ title }, index) => (
           <Chip
             size="medium"
             key={index}
@@ -114,25 +98,18 @@ function MobileLayout({ selectedItemIndex, handleItemClick, selectedFeature }) {
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             minHeight: 250,
-            backgroundImage: 'var(--items-imageLight)',
+            backgroundImage: 'var(--trending-imageLight)',
             ...theme.applyStyles('dark', {
-              backgroundImage: 'var(--items-imageDark)',
+              backgroundImage: 'var(--trending-imageDark)',
             }),
           })}
-          style={
-            items[selectedItemIndex]
-              ? {
-                  '--items-imageLight': items[selectedItemIndex].imageLight,
-                  '--items-imageDark': items[selectedItemIndex].imageDark,
-                }
-              : {}
-          }
+          style={{
+            '--trending-imageLight': trending[selectedItemIndex].imageLight,
+            '--trending-imageDark': trending[selectedItemIndex].imageDark,
+          }}
         />
         <Box sx={{ px: 2, pb: 2 }}>
-          <Typography
-            gutterBottom
-            sx={{ color: 'text.primary', fontWeight: 'medium' }}
-          >
+          <Typography gutterBottom sx={{ color: 'text.primary', fontWeight: 'medium' }}>
             {selectedFeature.title}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1.5 }}>
@@ -148,92 +125,180 @@ MobileLayout.propTypes = {
   handleItemClick: PropTypes.func.isRequired,
   selectedFeature: PropTypes.shape({
     description: PropTypes.string.isRequired,
-    icon: PropTypes.element,
+    title: PropTypes.string.isRequired,
     imageDark: PropTypes.string.isRequired,
     imageLight: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
   }).isRequired,
   selectedItemIndex: PropTypes.number.isRequired,
 };
 
-export { MobileLayout };
-
-function Features() {
+export default function TrendingMovies() {
+  const theme = useTheme();
   const [selectedItemIndex, setSelectedItemIndex] = React.useState(0);
 
   return (
-    <Container id="features" sx={{ py: { xs: 8, sm: 16 } }}>
-      <Box sx={{ width: { sm: '100%', md: '60%' } }}>
-        <Typography
-          component="h2"
-          variant="h4"
-          gutterBottom
-          sx={{ color: 'text.primary' }}
-        >
-          What's in the Store
-        </Typography>
-        <Typography
-          variant="body1"
-          sx={{ color: 'text.secondary', mb: { xs: 2, sm: 4 } }}
-        >
-          
-        </Typography>
-      </Box>
-     
-        <Box
-  sx={{
-    display: { xs: 'none', sm: 'grid' }, // Changed from flex to grid
-    width: '100%',
-    gridTemplateColumns: { sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)', lg: 'repeat(4, 1fr)' },
-    gap: 3,
-    height: 'auto', 
-  }}
->
-  {items.map((item, index) => (
-    <Card
-      key={index}
-      variant="outlined"
+
+    // Trending section
+    <>
+    <Container
+      id="trending-movies"
       sx={{
-        height: '100%',
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-        '&:hover': {
-          transform: 'scale(1.03)',
-          boxShadow: 6,
-        },
+        pt: { xs: 8, sm: 5 },
+        pb: { xs: 8, sm: 12 },
+        position: 'relative',
       }}
     >
       <Box
-        sx={(theme) => ({
-          position: 'relative',
-          pt: '150%', 
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundImage: 'var(--items-imageLight)',
-          ...theme.applyStyles('dark', {
-            backgroundImage: 'var(--items-imageDark)',
-          }),
-        })}
-        style={{
-          '--items-imageLight': item.imageLight,
-          '--items-imageDark': item.imageDark,
+        sx={{
+          width: '100%',
+          textAlign: { sm: 'center', md: 'center' },
+          mb: 10,
         }}
-      />
-      <Box sx={{ p: 2 }}>
-        <Typography variant="h6" component="h3" gutterBottom>
-          {item.title}
+      >
+        <Typography component="h2" variant="h4" gutterBottom sx={{ color: 'text.primary' }}>
+          Trending Right Now
         </Typography>
-        <Typography variant="body2" color="text.secondary">
-          {item.description}
+        <Typography variant="body1" sx={{ color: 'text.secondary', mb: 4 }}>
+          These films have earned high praise from countless viewers, making them some of the most talked-about picks right now.
         </Typography>
       </Box>
-    </Card>
-  ))}
-</Box>
+
+      <Box
+        sx={{
+          display: { xs: 'none', sm: 'grid' },
+          width: '100%',
+          gridTemplateColumns: { sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)', lg: 'repeat(4, 1fr)' },
+          gap: 3,
+        }}
+      >
+        {trending.map((item, index) => (
+          <Card
+            key={index}
+            variant="outlined"
+            sx={{
+              height: '100%',
+              transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+              '&:hover': {
+                transform: 'scale(1.03)',
+                boxShadow: 6,
+              },
+            }}
+          >
+            <Box
+              sx={(theme) => ({
+                position: 'relative',
+                pt: '125%',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundImage: 'var(--trending-imageLight)',
+                ...theme.applyStyles('dark', {
+                  backgroundImage: 'var(--trending-imageDark)',
+                }),
+              })}
+              style={{
+                '--trending-imageLight': item.imageLight,
+                '--trending-imageDark': item.imageDark,
+              }}
+            />
+            <Box sx={{ p: 2 }}>
+              <Typography variant="h6" component="h3" gutterBottom>
+                {item.title}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {item.description}
+              </Typography>
+            </Box>
+          </Card>
+        ))}
+      </Box>
+
+      <MobileLayout
+        selectedItemIndex={selectedItemIndex}
+        handleItemClick={(index) => setSelectedItemIndex(index)}
+        selectedFeature={trending[selectedItemIndex]}
+      />
     </Container>
+
+    {/* Movie Library */}
+
+    <Container
+      id="Movie-Library"
+      sx={{
+        pt: { xs: 8, sm: 5 },
+        pb: { xs: 8, sm: 12 },
+        position: 'relative',
+      }}
+    >
+      <Box
+        sx={{
+          width: '100%',
+          textAlign: { sm: 'center', md: 'center' },
+          mb: 10,
+        }}
+      >
+        <Typography component="h2" variant="h4" gutterBottom sx={{ color: 'text.primary' }}>
+          Movie Library
+        </Typography>
+        <Typography variant="body1" sx={{ color: 'text.secondary', mb: 4 }}>
+          We've handpicked the best movies just for you—carefully curated to bring you the finest in cinema. From timeless classics to the latest blockbusters, every title in our library is chosen with care to match your taste. Whether you're in the mood for a thrilling adventure, heartwarming drama, or a night of laughs, we’ve got something special waiting for you.
+        </Typography>
+      </Box>
+
+      <Box
+        sx={{
+          display: { xs: 'none', sm: 'grid' },
+          width: '100%',
+          gridTemplateColumns: { sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)', lg: 'repeat(4, 1fr)' },
+          gap: 3,
+        }}
+      >
+        {trending.map((item, index) => (
+          <Card
+            key={index}
+            variant="outlined"
+            sx={{
+              height: '100%',
+              transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+              '&:hover': {
+                transform: 'scale(1.03)',
+                boxShadow: 6,
+              },
+            }}
+          >
+            <Box
+              sx={(theme) => ({
+                position: 'relative',
+                pt: '125%',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundImage: 'var(--trending-imageLight)',
+                ...theme.applyStyles('dark', {
+                  backgroundImage: 'var(--trending-imageDark)',
+                }),
+              })}
+              style={{
+                '--trending-imageLight': item.imageLight,
+                '--trending-imageDark': item.imageDark,
+              }}
+            />
+            <Box sx={{ p: 2 }}>
+              <Typography variant="h6" component="h3" gutterBottom>
+                {item.title}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {item.description}
+              </Typography>
+            </Box>
+          </Card>
+        ))}
+      </Box>
+
+      <MobileLayout
+        selectedItemIndex={selectedItemIndex}
+        handleItemClick={(index) => setSelectedItemIndex(index)}
+        selectedFeature={trending[selectedItemIndex]}
+      />
+    </Container>
+    </>
   );
 }
-
-export default Features;
