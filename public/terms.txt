@@ -1,0 +1,39 @@
+1. Use of Service
+This app is intended for personal, non-commercial use only.
+
+You must be at least 13 years old to use the app.
+
+2. Account Registration
+Users are responsible for keeping their login credentials confidential.
+
+Any activity under your account is your responsibility.
+
+3. Booking and Payments
+Movie ticket bookings are subject to seat availability.
+
+All payments are processed securely via third-party payment gateways.
+
+Tickets once booked may not be refundable unless specified.
+
+4. Content
+Movie posters, descriptions, and trailers are provided for informational purposes only.
+
+We are not liable for any inaccuracies in movie information.
+
+5. User Conduct
+Users must not post offensive, illegal, or misleading content in reviews or comments.
+
+Any abuse of the app may result in suspension of access.
+
+6. Changes and Updates
+We reserve the right to modify the app, pricing, or these terms at any time without notice.
+
+7. Limitation of Liability
+MovieMania is not responsible for issues related to theater availability, show delays, or cancellations.
+
+8. Privacy
+We respect your privacy. Please refer to our [Privacy Policy] for details.
+
+9. Governing Law
+These terms are governed by the laws of [Your Country/State].
+

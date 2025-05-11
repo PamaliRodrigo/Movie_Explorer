@@ -13,6 +13,7 @@ import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import ForgotPassword from './ForgotPassword';
 import { GoogleIcon, FacebookIcon, SitemarkIcon } from './CustomIcons';
+import { useNavigate } from 'react-router-dom';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -33,6 +34,12 @@ const Card = styled(MuiCard)(({ theme }) => ({
 }));
 
 function SignInCard() {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate('Home'); 
+  };
+
   const [emailError, setEmailError] = React.useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
   const [passwordError, setPasswordError] = React.useState(false);
@@ -57,6 +64,7 @@ function SignInCard() {
       email: data.get('email'),
       password: data.get('password'),
     });
+    navigate('/Home')
   };
 
   const validateInputs = () => {
@@ -154,7 +162,7 @@ function SignInCard() {
           label="Remember me"
         />
         <ForgotPassword open={open} handleClose={handleClose} />
-        <Button type="submit" fullWidth variant="contained" onClick={validateInputs}>
+        <Button type="submit" fullWidth variant="contained" onClick={handleSubmit}>
           Sign in
         </Button>
         <Typography sx={{ textAlign: 'center' }}>

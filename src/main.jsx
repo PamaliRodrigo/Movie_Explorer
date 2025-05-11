@@ -5,11 +5,15 @@ import SignInCard from './components/SignInCard';
 import SignInSide from './SignInSide';
 import Content from './components/Content';
 import AppTheme from './shared-theme/AppTheme';
+import MarketingPage from './MarketingPage';
+import { BrowserRouter } from 'react-router-dom';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
+    <BrowserRouter>
     <AppTheme>
-    <SignInSide></SignInSide>
+        <App/>
     </AppTheme>
+    </BrowserRouter>
   </StrictMode>,
 )

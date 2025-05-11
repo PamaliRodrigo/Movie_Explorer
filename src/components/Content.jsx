@@ -3,33 +3,33 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import AutoFixHighRoundedIcon from '@mui/icons-material/AutoFixHighRounded';
-import ConstructionRoundedIcon from '@mui/icons-material/ConstructionRounded';
-import SettingsSuggestRoundedIcon from '@mui/icons-material/SettingsSuggestRounded';
+import MovieFilterIcon from '@mui/icons-material/MovieFilter';
 import ThumbUpAltRoundedIcon from '@mui/icons-material/ThumbUpAltRounded';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { SitemarkIcon } from './CustomIcons';
 
 const items = [
   {
-    icon: <SettingsSuggestRoundedIcon sx={{ color: 'text.secondary' }} />,
-    title: 'Adaptable performance',
+    icon: <MovieFilterIcon sx={{ color: 'text.secondary' }} />,
+    title: 'Seamless Entertainment',
     description:
-      'Our product effortlessly adjusts to your needs, boosting efficiency and simplifying your tasks.',
+      'Our platform adapts to your viewing preferences, making movie discovery and ticket booking effortless and enjoyable.',
   },
   {
-    icon: <ConstructionRoundedIcon sx={{ color: 'text.secondary' }} />,
-    title: 'Built to last',
+    icon: <AccessTimeIcon sx={{ color: 'text.secondary' }} />,
+    title: 'Reliable Access',
     description:
-      'Experience unmatched durability that goes above and beyond with lasting investment.',
+      'Enjoy uninterrupted movie nights with a dependable system that ensures your bookings, payments, and schedules are always secure.',
   },
   {
     icon: <ThumbUpAltRoundedIcon sx={{ color: 'text.secondary' }} />,
-    title: 'Great user experience',
+    title: 'Intuitive Experience',
     description:
-      'Integrate our product into your routine with an intuitive and easy-to-use interface.',
+      'Navigate with ease—from finding showtimes to picking the perfect seat—our interface is designed for smooth, stress-free interaction.',
   },
   {
     icon: <AutoFixHighRoundedIcon sx={{ color: 'text.secondary' }} />,
-    title: 'Innovative functionality',
+    title: 'Cutting-Edge Features',
     description:
       'Stay ahead with features that set new standards, addressing your evolving needs better than the rest.',
   },
