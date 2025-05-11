@@ -37,7 +37,7 @@ function SignInCard() {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate('Home'); 
+    navigate('/home'); 
   };
 
   const [emailError, setEmailError] = React.useState(false);
@@ -64,7 +64,7 @@ function SignInCard() {
       email: data.get('email'),
       password: data.get('password'),
     });
-    navigate('/Home')
+    navigate('/home')
   };
 
   const validateInputs = () => {
