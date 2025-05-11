@@ -4,6 +4,7 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/system';
 
+//just some random logos to show collaborations
 const whiteLogos = [
   'https://logowik.com/content/uploads/images/pixar-animation-studios4926.logowik.com.webp',
   'https://toppng.com/uploads/preview/walt-disney-logo-transparent-11662026459ljuftu4zbc.png',
@@ -41,7 +42,7 @@ export default function LogoCollection() {
         align="center"
         sx={{ color: 'text.secondary' }}
       >
-        Trusted by the best companies
+        Collaborated with the best companies
       </Typography>
       <Grid container sx={{ justifyContent: 'center', mt: 0.5, opacity: 0.6 }}>
         {logos.map((logo, index) => (

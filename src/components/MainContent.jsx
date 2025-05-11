@@ -28,7 +28,7 @@ import Badge from '@mui/material/Badge';
 import axios from 'axios';
 import HeroAlt from './HeroAlt';
 
-const TMDB_API_KEY = '536bf1b102f1ad7b92eb4e41eae3d40e';
+const TMDB_API_KEY = import.meta.env.VITE_API_KEY;
 const BASE_IMAGE_URL = 'https://image.tmdb.org/t/p/w500';
 const BASE_BACKDROP_URL = 'https://image.tmdb.org/t/p/original';
 
@@ -55,11 +55,11 @@ const GENRE_MAP = {
   37: 'Western'
 };
 
-// Local storage keys
+
 const LAST_SEARCH_KEY = 'lastSearchedMovie';
 const FAVORITES_KEY = 'favoriteMovies';
 
-// Styled components
+
 const StyledMovieCard = styled(Card)(({ theme }) => ({
   display: 'grid',
   flexDirection: 'row',
@@ -97,7 +97,7 @@ const StyledCardContent = styled(CardContent)({
 const StyledOverviewText = styled(Typography)({
   display: '-webkit-box',
   WebkitBoxOrient: 'vertical',
-  WebkitLineClamp: 2, // Reduced to 2 lines for more compact display
+  WebkitLineClamp: 2, 
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   lineHeight: 1.4,
@@ -128,7 +128,7 @@ const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
   padding: theme.spacing(3),
 }));
 
-// Movie Credits component displaying cast members and release date
+
 function MovieCredits({ cast = [], releaseDate }) {
   return (
     <Box
@@ -190,13 +190,13 @@ function MovieCredits({ cast = [], releaseDate }) {
   );
 }
 
-// Detailed Movie Dialog Component
+
 function MovieDetailsDialog({ open, onClose, movie, favorites, onToggleFavorite }) {
   const [trailerUrl, setTrailerUrl] = useState('');
   const isFavorite = favorites.some(fav => fav.id === movie?.id);
 
   useEffect(() => {
-    // Fetch trailer when dialog opens
+    
     if (open && movie) {
       fetchTrailer(movie.id);
     }
@@ -359,7 +359,7 @@ function MovieDetailsDialog({ open, onClose, movie, favorites, onToggleFavorite 
   );
 }
 
-// History Dialog Component
+
 function SearchHistoryDialog({ open, onClose, lastSearchedMovie, onSelectMovie }) {
   const handleSelect = () => {
     if (lastSearchedMovie) {
@@ -400,7 +400,7 @@ function SearchHistoryDialog({ open, onClose, lastSearchedMovie, onSelectMovie }
   );
 }
 
-// Favorites Dialog Component
+// Favorites 
 function FavoritesDialog({ open, onClose, favorites, onSelectMovie, onRemoveFavorite }) {
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
@@ -464,7 +464,7 @@ function FavoritesDialog({ open, onClose, favorites, onSelectMovie, onRemoveFavo
   );
 }
 
-// Main content component
+// Main
 export default function MainContent() {
   const [focusedCardIndex, setFocusedCardIndex] = useState(null);
   const [allMovies, setAllMovies] = useState([]); // Store all fetched movies
@@ -483,7 +483,7 @@ export default function MainContent() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
 
-  // Load favorites and last search from local storage
+  // Load favorites and last search 
   useEffect(() => {
     try {
       const storedFavorites = localStorage.getItem(FAVORITES_KEY);
@@ -500,7 +500,7 @@ export default function MainContent() {
     }
   }, []);
 
-  // Fetch genres on component mount
+  // Fetch genres 
   useEffect(() => {
     const fetchGenres = async () => {
       try {
@@ -516,7 +516,7 @@ export default function MainContent() {
     fetchGenres();
   }, []);
 
-  // Fetch popular movies on component mount
+  // Fetch popular movies 
   useEffect(() => {
     const fetchPopularMovies = async () => {
       try {
@@ -524,7 +524,7 @@ export default function MainContent() {
           `https://api.themoviedb.org/3/movie/popular?api_key=${TMDB_API_KEY}`
         );
         
-        // Get extended info for each movie including credits
+        
         const moviesWithDetails = await Promise.all(
           res.data.results.slice(0, 12).map(async (movie) => {
             try {
@@ -533,7 +533,7 @@ export default function MainContent() {
                 `https://api.themoviedb.org/3/movie/${movie.id}/credits?api_key=${TMDB_API_KEY}`
               );
               
-              // Add readable genre names to the movie object
+              
               const genreNames = movie.genre_ids.map(id => GENRE_MAP[id] || 'Unknown');
               
               return { 
@@ -553,7 +553,7 @@ export default function MainContent() {
         );
         
         setAllMovies(moviesWithDetails);
-        setFilteredMovies(moviesWithDetails); // Initially show all movies
+        setFilteredMovies(moviesWithDetails);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching popular movies:', error);
@@ -570,7 +570,7 @@ export default function MainContent() {
       setFilteredMovies(allMovies);
     } else {
       const filtered = allMovies.filter(movie => {
-        // Match genre ids with the selected filter
+        // Match genre ids 
         return movie.genreNames.includes(activeFilter);
       });
       setFilteredMovies(filtered);
@@ -578,7 +578,7 @@ export default function MainContent() {
   }, [activeFilter, allMovies]);
 
   const handleSearchResults = async (searchResults) => {
-    // Get extended info for search results
+    
     const resultsWithDetails = await Promise.all(
       searchResults.slice(0, 12).map(async (movie) => {
         try {
@@ -617,7 +617,7 @@ export default function MainContent() {
       setFilteredMovies(filtered);
     }
     
-    // If there's at least one result, save the first result as last searched movie
+    
     if (resultsWithDetails.length > 0) {
       const movieToSave = resultsWithDetails[0];
       setLastSearchedMovie(movieToSave);
@@ -651,19 +651,19 @@ export default function MainContent() {
     });
   };
 
-  // Get primary genre for a movie to display in the UI
+  // Get primary genre
   const getPrimaryGenre = (movie) => {
     if (!movie.genre_ids || movie.genre_ids.length === 0) return 'Unknown';
     return GENRE_MAP[movie.genre_ids[0]] || 'Unknown';
   };
 
-  // Handle movie selection for detail view
+  
   const handleMovieSelect = (movie) => {
     setSelectedMovie(movie);
     setDialogOpen(true);
   };
 
-  // Toggle favorite status of a movie
+  
   const handleToggleFavorite = (movie) => {
     const isFavorite = favorites.some(fav => fav.id === movie.id);
     

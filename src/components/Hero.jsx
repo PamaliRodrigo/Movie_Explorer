@@ -41,8 +41,7 @@ export default function Hero() {
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
 
   const handleSignIn = () => {
-    // Here you would typically handle the sign-in logic
-    // For now, we'll just show the welcome popup
+    //mock sign up.(mocked for demostration)
     setOpenSnackbar(true);
   };
 
