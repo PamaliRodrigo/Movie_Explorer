@@ -124,7 +124,7 @@ MobileLayout.propTypes = {
   movies: PropTypes.array.isRequired,
 };
 
-// MovieGrid component for displaying grid of movies
+
 function MovieGrid({ movies }) {
   if (!movies || movies.length === 0) {
     return null;
@@ -182,7 +182,7 @@ MovieGrid.propTypes = {
   movies: PropTypes.array.isRequired,
 };
 
-// Main Movie Showcase component
+
 export default function MovieShowcase() {
   const [tabValue, setTabValue] = React.useState(0);
   const [trendingMovies, setTrendingMovies] = React.useState([]);
@@ -191,16 +191,16 @@ export default function MovieShowcase() {
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState(null);
   
-  // Selected movie indices for mobile view
+
   const [selectedTrendingIndex, setSelectedTrendingIndex] = React.useState(0);
   const [selectedLatestIndex, setSelectedLatestIndex] = React.useState(0);
   const [selectedTopPickIndex, setSelectedTopPickIndex] = React.useState(0);
 
-  // API key for TMDb
-  const API_KEY = '536bf1b102f1ad7b92eb4e41eae3d40e';
-  const API_BASE_URL = 'https://api.themoviedb.org/3';
+  
+  const API_KEY =import.meta.env.VITE_API_KEY;
+  const API_BASE_URL =import.meta.env.VITE_BASE_URL;
 
-  // Fetch movies from TMDb API
+
   React.useEffect(() => {
     const fetchMovies = async () => {
       try {
@@ -219,7 +219,7 @@ export default function MovieShowcase() {
         );
         const latestData = await latestResponse.json();
         
-        // Fetch top-rated movies (using as "top picks")
+        
         const topPicksResponse = await fetch(
           `${API_BASE_URL}/movie/top_rated?api_key=${API_KEY}`
         );
@@ -248,7 +248,7 @@ export default function MovieShowcase() {
     return (
       <Container
         sx={{
-          pt: { xs: 10, sm: 12 }, // Added extra padding to avoid navbar overlap
+          pt: { xs: 10, sm: 12 }, 
           pb: { xs: 8, sm: 12 },
           display: 'flex',
           justifyContent: 'center',
@@ -266,7 +266,7 @@ export default function MovieShowcase() {
     return (
       <Container
         sx={{
-          pt: { xs: 10, sm: 12 }, // Added extra padding to avoid navbar overlap
+          pt: { xs: 10, sm: 12 }, 
           pb: { xs: 8, sm: 12 },
         }}
       >
@@ -279,7 +279,7 @@ export default function MovieShowcase() {
     <Container
       id="movie-showcase"
       sx={{
-        pt: { xs: 10, sm: 12 }, // Added extra padding to avoid navbar overlap
+        pt: { xs: 10, sm: 12 }, 
         pb: { xs: 8, sm: 12 },
         position: 'relative',
         mt:15

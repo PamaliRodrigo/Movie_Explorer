@@ -12,14 +12,13 @@ import {
   styled
 } from '@mui/material';
 
-
 // TMDB API Constants
-const API_KEY = '536bf1b102f1ad7b92eb4e41eae3d40e'; // You'll need to replace this with your actual API key
+const API_KEY = import.meta.env.VITE_API_KEY;
 const BASE_URL = 'https://api.themoviedb.org/3';
 const IMG_BASE_URL = 'https://image.tmdb.org/t/p/w200';
 
-// Article/Movie Card Component
-const StyledArticleCard = styled(Card)(({ theme, focused }) => ({
+//Movie Card Component
+const StyledArticleCard = styled(Card)(({ theme, isFocused }) => ({
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-between',
@@ -27,9 +26,9 @@ const StyledArticleCard = styled(Card)(({ theme, focused }) => ({
   height: '100%',
   padding: theme.spacing(2),
   transition: 'transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
-  outline: focused ? '2px solid' : 'none',
-  outlineColor: focused ? theme.palette.primary.main : 'transparent',
-  outlineOffset: focused ? theme.spacing(0.5) : 0,
+  outline: isFocused ? '2px solid' : 'none',
+  outlineColor: isFocused ? theme.palette.primary.main : 'transparent',
+  outlineOffset: isFocused ? theme.spacing(0.5) : 0,
   borderRadius: theme.shape.borderRadius,
   '&:hover': {
     transform: 'translateY(-4px)',
@@ -101,11 +100,11 @@ const StyledAvatarGroup = styled(AvatarGroup)(({ theme }) => ({
 }));
 
 function ArticleCard({ article, index, focusedIndex, onFocus, onBlur }) {
-  const focused = focusedIndex === index;
+  const isFocused = focusedIndex === index;
   
   return (
     <StyledArticleCard 
-      focused={focused}
+      isfocused={isFocused}
       onFocus={() => onFocus(index)}
       onBlur={onBlur}
       tabIndex={0}
@@ -130,9 +129,9 @@ function ArticleCard({ article, index, focusedIndex, onFocus, onBlur }) {
       <CreditsContainer>
         <PeopleContainer>
           <StyledAvatarGroup max={3}>
-            {article.credits.slice(0, 3).map((person, index) => (
+            {article.credits.slice(0, 3).map((person, idx) => (
               <Avatar
-                key={index}
+                key={idx}
                 alt={person.name}
                 src={person.profile_path ? `${IMG_BASE_URL}${person.profile_path}` : '/api/placeholder/24/24'}
               />
@@ -184,6 +183,11 @@ export default function Latest() {
         : `${BASE_URL}/movie/${id}/credits?api_key=${API_KEY}`;
       
       const response = await fetch(endpoint);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
       const data = await response.json();
       
       let keyPeople = [];
@@ -208,31 +212,41 @@ export default function Latest() {
     const fetchTrending = async () => {
       setLoading(true);
       try {
-        const response = await fetch(
-          `${BASE_URL}/trending/all/week?api_key=${API_KEY}&page=${page}`
-        );
+        const url = `${BASE_URL}/trending/all/week?api_key=${API_KEY}&page=${page}`;
+        const response = await fetch(url);
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const data = await response.json();
-        
+
         if (data.results) {
           const moviesWithCredits = await Promise.all(
             data.results.slice(0, 10).map(async (item) => {
               const credits = await fetchMovieCredits(item.id, item.media_type);
               const formattedDate = item.release_date || item.first_air_date;
-              
+
               credits.forEach(person => {
                 person.releaseDate = formatDate(formattedDate);
               });
-              
+
               return {
                 ...item,
-                credits: credits.length > 0 ? credits : [{ name: 'Unknown', profile_path: null, releaseDate: formatDate(formattedDate) }],
+                credits: credits.length > 0
+                  ? credits
+                  : [{
+                      name: 'Unknown',
+                      profile_path: null,
+                      releaseDate: formatDate(formattedDate),
+                    }],
                 tag: getMediaTag(item),
                 title: item.title || item.name,
                 description: item.overview,
               };
             })
           );
-          
+
           setMovies(moviesWithCredits);
           setTotalPages(Math.min(data.total_pages, 10));
         }
@@ -245,6 +259,7 @@ export default function Latest() {
 
     fetchTrending();
   }, [page]);
+
 
   return (
     <Box sx={{ maxWidth: 'lg', mx: 'auto', px: 4 }}>
@@ -265,7 +280,7 @@ export default function Latest() {
             my: 4
           }}>
             {movies.map((movie, index) => (
-              <Box key={index}>
+              <Box key={movie.id || index}>
                 <ArticleCard 
                   article={movie}
                   index={index}
