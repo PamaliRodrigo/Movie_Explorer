@@ -15,6 +15,7 @@ import ColorModeIconDropdown from '../shared-theme/ColorModeIconDropdown';
 import { SitemarkIcon } from './CustomIcons';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import SignUp from './SignUp';
 
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
@@ -76,10 +77,10 @@ export default function AppAppBar() {
               alignItems: 'center',
             }}
           >
-            <Button color="primary" variant="text" size="small">
+            <Button color="primary" variant="text" size="small" onClick={()=>navigate('/SignInSide')}>
               Sign in
             </Button>
-            <Button color="primary" variant="contained" size="small">
+              <Button color="primary" variant="contained" size="small"  onClick={()=>navigate('/SignUp')}>
               Sign up
             </Button>
             <ColorModeIconDropdown />

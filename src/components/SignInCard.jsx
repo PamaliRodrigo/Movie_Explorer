@@ -64,7 +64,7 @@ function SignInCard() {
       email: data.get('email'),
       password: data.get('password'),
     });
-    navigate('/Home')
+    navigate('/home')
   };
 
   const validateInputs = () => {

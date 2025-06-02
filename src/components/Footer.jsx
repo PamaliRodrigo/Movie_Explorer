@@ -10,14 +10,14 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
-import TwitterIcon from '@mui/icons-material/X';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { SitemarkIcon } from './CustomIcons';
 function Copyright() {
   return (
     <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
       {'Copyright © '}
-      <Link color="text.secondary" href="https://mui.com/">
-        Reelify
+      <Link color="text.secondary" href="https://personal-portfolio-lake-delta-41.vercel.app/">
+        PamaliR
       </Link>
       &nbsp;
       {new Date().getFullYear()}
@@ -160,7 +160,7 @@ export default function Footer() {
           <IconButton
             color="inherit"
             size="small"
-            href="https://github.com/mui"
+            href="https://github.com/PamaliRodrigo"
             aria-label="GitHub"
             sx={{ alignSelf: 'center' }}
           >
@@ -169,16 +169,16 @@ export default function Footer() {
           <IconButton
             color="inherit"
             size="small"
-            href="https://x.com/MaterialUI"
-            aria-label="X"
+            href="https://personal-portfolio-lake-delta-41.vercel.app/"
+            aria-label="Portfolio"
             sx={{ alignSelf: 'center' }}
           >
-            <TwitterIcon />
+            <AccountCircleIcon />
           </IconButton>
           <IconButton
             color="inherit"
             size="small"
-            href="https://www.linkedin.com/company/mui/"
+            href="https://www.linkedin.com/in/pamali-buwanaja-42a181209"
             aria-label="LinkedIn"
             sx={{ alignSelf: 'center' }}
           >

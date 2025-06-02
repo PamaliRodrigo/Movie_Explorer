@@ -1,3 +1,24 @@
+<<<<<<< HEAD
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "vite.config.js",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/index.html",
+      "methods": ["GET"]
+    }
+  ]
+}
+=======
 {
   "version": 2,
   "builds": [
@@ -23,3 +44,4 @@
     }
   ]
 }
+>>>>>>> 9c2e9d0b599ab91757d87ed5ca0f00aaf3c7bc57
