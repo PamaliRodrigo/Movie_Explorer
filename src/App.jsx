@@ -4,6 +4,7 @@ import MarketingPage from './MarketingPage';
 import SignInSide from './SignInSide';
 import MovieDetails from './MovieDetails';
 import Testimonals from './Testimonals';
+import SignUp from './components/SignUp';
 
 function App() {
   return (
@@ -12,7 +13,8 @@ function App() {
       <Route path="/home" element={<MarketingPage />} />
       <Route path="/movies" element={<Testimonals />} />
       <Route path="/explore/:movieId" element={<MovieDetails />} />
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path="*" element={<MovieDetails/>} />
+      <Route path="SignUp" element={<SignUp/>}/>
     </Routes>
   );
 }
