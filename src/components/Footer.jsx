@@ -101,10 +101,10 @@ export default function Footer() {
           <Link color="text.secondary" variant="body2" component={RouterLink} to="/home">
             Home
           </Link>
-          <Link color="text.secondary" variant="body2" href="/movies">
+          <Link color="text.secondary" variant="body2" component={RouterLink} to="/movies">
             Library
           </Link>
-          <Link color="text.secondary" variant="body2" href="/trending">
+          <Link color="text.secondary" variant="body2" component={RouterLink} to="/trending">
             Explore
           </Link>
         </Box>
