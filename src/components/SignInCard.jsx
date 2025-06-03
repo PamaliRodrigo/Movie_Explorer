@@ -161,7 +161,7 @@ function SignInCard() {
           label="Remember me"
         />
         <ForgotPassword open={open} handleClose={handleClose} />
-        <Button type="submit" fullWidth variant="contained" onClick={handleClick}>
+        <Button fullWidth variant="contained" onClick={handleClick}>
           Sign in
         </Button>
         <Typography sx={{ textAlign: 'center' }}>
