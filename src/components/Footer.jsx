@@ -12,6 +12,7 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { SitemarkIcon } from './CustomIcons';
+import { Link as RouterLink } from 'react-router-dom';
 function Copyright() {
   return (
     <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
@@ -97,7 +98,7 @@ export default function Footer() {
             gap: 1,
           }}
         >
-          <Link color="text.secondary" variant="body2" href="/home">
+          <Link color="text.secondary" variant="body2" component={RouterLink} to="/home">
             Home
           </Link>
           <Link color="text.secondary" variant="body2" href="/movies">
